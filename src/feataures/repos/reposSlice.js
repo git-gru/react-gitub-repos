@@ -26,6 +26,7 @@ const reposSlice = createSlice({
         // Add any fetched repos to the array
         state.repos = action.payload.items;
         state.totalCount = action.payload.total_count;
+        state.error = action.payload.message ?? "";
       })
       .addCase(fetchRepos.rejected, (state, action) => {
         state.status = "failed";

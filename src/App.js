@@ -17,6 +17,7 @@ function App() {
   const dispatch = useDispatch();
   const repos = useSelector(selectAllRepos);
   const totalCount = useSelector((state) => state.repos.totalCount);
+  const error = useSelector((state) => state.repos.error);
 
   useEffect(() => {
     if (debouncedQuery) {
@@ -35,7 +36,7 @@ function App() {
   if (!repos) {
     return (
       <div className="App">
-        {/* {message} */}
+        {error}
         <button onClick={() => setPage(1)}>Go to first page</button>
       </div>
     );
