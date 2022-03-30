@@ -13,6 +13,7 @@ const reposSlice = createSlice({
   reducers: {
     reposEmptied: (state) => {
       state.repos = [];
+      state.totalCount = 0;
     },
   },
   extraReducers(builder) {
@@ -35,7 +36,7 @@ const reposSlice = createSlice({
 
 export const fetchRepos = createAsyncThunk(
   "repos/fetchRepos",
-  async (q, page, per_page) => {
+  async ({ q, page, per_page }) => {
     const res = await fetch(
       `https://api.github.com/search/repositories?q=${q}&page=${page}&per_page=${per_page}`
     );

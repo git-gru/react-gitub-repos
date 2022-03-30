@@ -16,13 +16,14 @@ function App() {
 
   const dispatch = useDispatch();
   const repos = useSelector(selectAllRepos);
-  const totalCount = useSelector((state) => state.repos.status);
+  const totalCount = useSelector((state) => state.repos.totalCount);
 
   useEffect(() => {
     if (debouncedQuery) {
-      dispatch(fetchRepos(debouncedQuery, page, PER_PAGE));
+      dispatch(fetchRepos({ q: debouncedQuery, page, per_page: PER_PAGE }));
     } else {
       dispatch(reposEmptied());
+      setPage(1);
     }
   }, [page, debouncedQuery, dispatch]);
 
@@ -43,6 +44,7 @@ function App() {
   return (
     <div className="App">
       <input
+        className="search-input"
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
