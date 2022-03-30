@@ -2,6 +2,9 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Description
+[Create an application that displays a list of 20 repositories using Github API](https://drive.google.com/file/d/1FwTNaMWRF_HEutDrsv8wvFJVYr7se8FG/view?usp=sharing)
+
 ## Available Scripts
 
 In the project directory, you can run:
