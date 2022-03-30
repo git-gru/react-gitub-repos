@@ -1,28 +1,30 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { ReposTable } from "./feataures/repos/ReposTable";
+import {
+  selectAllRepos,
+  fetchRepos,
+  reposEmptied,
+} from "./feataures/repos/reposSlice";
 import "./App.css";
 
 function App() {
   const PER_PAGE = 20;
   const [query, setQuery] = useState("react");
-  const [totalCount, setTotalCount] = useState(0);
-  const [repos, setRepos] = useState([]);
-  const [message, setMessage] = useState("");
   const [page, setPage] = useState(1);
+  const debouncedQuery = useDebounce(query, 500);
 
-  const fetchRepos = useCallback(async (q, page, per_page) => {
-    const res = await fetch(
-      `https://api.github.com/search/repositories?q=${q}&page=${page}&per_page=${per_page}`
-    );
-    const jsonData = await res.json();
-    setRepos(jsonData.items);
-    setMessage(jsonData.message);
-    setTotalCount(jsonData.total_count);
-  }, []);
+  const dispatch = useDispatch();
+  const repos = useSelector(selectAllRepos);
+  const totalCount = useSelector((state) => state.repos.status);
 
   useEffect(() => {
-    fetchRepos(query, page, PER_PAGE);
-  }, [fetchRepos, page, query]);
+    if (debouncedQuery) {
+      dispatch(fetchRepos(debouncedQuery, page, PER_PAGE));
+    } else {
+      dispatch(reposEmptied());
+    }
+  }, [page, debouncedQuery, dispatch]);
 
   const totalPages = useMemo(
     () => Math.ceil(totalCount / PER_PAGE),
@@ -32,7 +34,7 @@ function App() {
   if (!repos) {
     return (
       <div className="App">
-        {message}
+        {/* {message} */}
         <button onClick={() => setPage(1)}>Go to first page</button>
       </div>
     );
@@ -40,6 +42,11 @@ function App() {
 
   return (
     <div className="App">
+      <input
+        type="text"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+      />
       <ReposTable repos={repos} />
       <div className="pagination-container">
         <button disabled={page === 1} onClick={() => setPage(1)}>
@@ -64,6 +71,22 @@ function App() {
       </div>
     </div>
   );
+}
+
+function useDebounce(value, delay) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
 }
 
 export default App;
