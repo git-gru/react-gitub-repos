@@ -37,27 +37,6 @@
   }
 }
 
-table {
-  border-collapse: collapse;
-}
-
-td,
-th {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
-}
-
-th {
-  font-weight: 700;
-  background-color: blue;
-  color: #fff;
-}
-
-tr:nth-child(even) {
-  background-color: #dddddd;
-}
-
 .pagination-container {
   display: inline-flex;
   gap: 4px;
